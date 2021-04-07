@@ -1,0 +1,24 @@
+<div class="row">
+    <form name="accountForm" #accountForm="ngForm">
+        <div class="col-sm-12 form-group" *ngIf="account.AccountID!=0">
+            <label for="TxtAccountID">Account ID:</label>
+            <input type="text" id="TxtAccountID" class="form-control" name="TxtAccountID" [(ngModel)]="AccountID" readonly />
+        </div>
+        <div class="col-sm-12 form-group mt-1">
+            <label for="SelAccountType">Account Type:</label>
+            <select id="SelAccountType" name="SelAccountType" [(ngModel)]="AccountTypeID" class="form-control">
+                <option *ngFor="let data of AccountTypeList" [ngValue]="data.AccountTypeID">{{data.AccountTypeName}}</option>
+            </select>
+            <small class="error" *ngIf="submit && (AccountTypeID==null || AccountTypeID=='')">Account type cannot be empty.</small>
+        </div>
+        <div class="col-sm-12 form-group mt-1">
+            <label for="TxtAccountName">Account Name:</label>
+            <input type="text" id="TxtAccountName" name="TxtAccountName" class="form-control" [(ngModel)]="AccountName" />
+            <small class="error" *ngIf="submit && (AccountName==null || AccountName=='')">Account name cannot be empty.</small>
+        </div>
+        <div class="col-sm-12 form-group mt-1">
+            <input type="button" id="BtnAddAccount" name="BtnAddAccount" class="btn btn-primary" value="Add New" *ngIf="account.AccountID==0" (click)="addAccount()" />
+            <input type="button" id="BtnSaveAccount" name="BtnSaveAccount" class="btn btn-primary" value="Edit" *ngIf="account.AccountID!=0" (click)="editAccount()" />
+        </div>
+    </form>
+</div>

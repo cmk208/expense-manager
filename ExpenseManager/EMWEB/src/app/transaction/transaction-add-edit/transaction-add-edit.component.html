@@ -1,0 +1,59 @@
+<div class="row">
+    <form name="transactionForm" #transactionForm="ngForm">
+        <div class="col-sm-12 form-group" *ngIf="transaction.TransactionID!=0">
+            <label for="TxtTransactionID">Transaction ID:</label>
+            <input type="text" id="TxtTransactionID" class="form-control" name="TxtTransactionID" [(ngModel)]="TransactionID" readonly />
+        </div>
+        <div class="col-sm-12 form-group mt-1">
+            <label for="SelTransactionType">Transaction Type:</label>
+            <select id="SelTransactionType" name="SelTransactionType" [(ngModel)]="TransactionTypeID" class="form-control" [disabled]="TransactionTypeDisabled" (change)='onTransactionTypeSelected($event)'>
+                <option *ngFor="let tt of TransactionTypeList" [ngValue]="tt.TransactionTypeID">{{tt.TransactionTypeName}}</option>
+            </select>
+            <small class="error" *ngIf="submit && (TransactionTypeID==null || TransactionTypeID=='')">Transaction type cannot be empty.</small>
+        </div>
+        <div class="col-sm-12 form-group mt-1">
+            <label for="SelFromAccount">From Account:</label>
+            <select id="SelFromAccount" name="SelFromAccount" [(ngModel)]="FromAccountID" class="form-control" (change)='onFromAccountSelected(FromAccountID)'>
+                <option *ngFor="let fa of FromAccountList" [ngValue]="fa.AccountID">{{fa.AccountName}}</option>
+            </select>
+            <small class="error" *ngIf="submit && (FromAccountID==null || FromAccountID=='')">From account cannot be empty.</small>
+        </div>
+        <div class="col-sm-12 form-group mt-1" *ngIf="transaction.TransactionTypeName=='Transfer'">
+            <label for="SelToAccount">To Account:</label>
+            <select id="SelToAccount" name="SelToAccount" [(ngModel)]="ToAccountID" class="form-control" (change)='onToAccountSelected(ToAccountID)'>
+                <option *ngFor="let ta of ToAccountList" [ngValue]="ta.AccountID">{{ta.AccountName}}</option>
+            </select>
+            <small class="error" *ngIf="submit && transaction.TransactionTypeName=='Transfer' && (ToAccountID==null || ToAccountID=='')">To account cannot be empty.</small>
+        </div>
+        <div class="col-sm-12 form-group mt-1" *ngIf="transaction.TransactionTypeName!='Transfer'">
+            <label for="SelCategory">Category:</label>
+            <select id="SelCategory" name="SelCategory" [(ngModel)]="CategoryID" class="form-control">
+                <option *ngFor="let c of CategoryList" [ngValue]="c.CategoryID">{{c.CategoryName}}</option>
+            </select>
+            <small class="error" *ngIf="submit && transaction.TransactionTypeName!='Transfer' && (CategoryID==null || CategoryID=='')">Category cannot be empty.</small>
+        </div>
+        <div class="col-sm-12 form-group mt-1">
+            <label for="TxtTransactionDate">Transaction Date:</label>
+            <input type="date" id="TxtTransactionDate" name="TxtTransactionDate" class="form-control" [(ngModel)]="TransactionDate" />
+            <small class="error" *ngIf="submit && TransactionDate==null">Transaction date cannot be empty.</small>
+        </div>
+        <div class="col-sm-12 form-group mt-1">
+            <label for="TxtTransactionTime">Transaction Time:</label>
+            <input type="time" id="TxtTransactionTime" name="TxtTransactionTime" class="form-control" [(ngModel)]="TransactionTime" />
+            <small class="error" *ngIf="submit && (TransactionTime==null || TransactionTime=='')">Transaction time cannot be empty.</small>
+        </div>
+        <div class="col-sm-12 form-group mt-1">
+            <label for="TxtAmount">Amount:</label>
+            <input type="number" id="TxtAmount" name="TxtAmount" class="form-control" [(ngModel)]="Amount" />
+            <small class="error" *ngIf="submit && (Amount==null || Amount=='')">Amount cannot be empty.</small>
+        </div>
+        <div class="col-sm-12 form-group mt-1">
+            <label for="TxtNote">Note (Optional):</label>
+            <textarea id="TxtNote" name="TxtNote" class="form-control" [(ngModel)]="Note"></textarea>
+        </div>
+        <div class="col-sm-12 form-group mt-1">
+            <input type="button" id="BtnAddTransaction" name="BtnAddTransaction" class="btn btn-primary" value="Add New" *ngIf="transaction.TransactionID==0" (click)="addTransaction()" />
+            <input type="button" id="BtnSaveTransaction" name="BtnSaveTransaction" class="btn btn-primary" value="Edit" *ngIf="transaction.TransactionID!=0" (click)="editTransaction()" />
+        </div>
+    </form>
+</div>
