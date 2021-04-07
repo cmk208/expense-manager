@@ -1,0 +1,29 @@
+<div class="row">
+    <form name="categoryForm" #categoryForm="ngForm">
+        <div class="col-sm-12 form-group" *ngIf="category.CategoryID!=0">
+            <label for="TxtCategoryID">Category ID:</label>
+            <input type="text" id="TxtCategoryID" class="form-control" name="TxtCategoryID" [(ngModel)]="CategoryID" readonly />
+        </div>
+        <div class="col-sm-12 form-group mt-1">
+            <label for="SelTransactionType">Transaction Type:</label>
+            <select id="SelTransactionType" name="SelTransactionType" [(ngModel)]="TransactionTypeID" class="form-control">
+                <option *ngFor="let data of TransactionTypeList" [ngValue]="data.TransactionTypeID">{{data.TransactionTypeName}}</option>
+            </select>
+            <small class="error" *ngIf="submit && (TransactionTypeID==null || TransactionTypeID=='')">Transaction type cannot be empty.</small>
+        </div>
+        <div class="col-sm-12 form-group mt-1">
+            <label for="TxtCategoryName">Category Name:</label>
+            <input type="text" id="TxtCategoryName" name="TxtCategoryName" class="form-control" [(ngModel)]="CategoryName" />
+            <small class="error" *ngIf="submit && (CategoryName==null || CategoryName=='')">Category Name cannot be empty.</small>
+        </div>
+        <div class="col-sm-12 form-group mt-1">
+            <label for="TxtSequence">Sequence:</label>
+            <input type="number" id="TxtSequence" name="TxtSequence" class="form-control" [(ngModel)]="Sequence" />
+            <small class="error" *ngIf="submit && Sequence==null">Sequence cannot be empty.</small>
+        </div>
+        <div class="col-sm-12 form-group mt-1">
+            <input type="button" id="BtnAddCategory" name="BtnAddCategory" class="btn btn-primary" value="Add New" *ngIf="category.CategoryID==0" (click)="addCategory()" />
+            <input type="button" id="BtnSaveCategory" name="BtnSaveCategory" class="btn btn-primary" value="Edit" *ngIf="category.CategoryID!=0" (click)="editCategory()" />
+        </div>
+    </form>
+</div>

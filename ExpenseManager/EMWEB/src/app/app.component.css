@@ -1,0 +1,30 @@
+#DivOverlay {
+    background: rgba(0,0,0, 0.7);
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: none;
+    position: fixed;
+    z-index: 9998;
+}
+
+    #DivOverlay div {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+
+        #DivOverlay div i {
+            font-size: 30px;
+            color: #fff;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+.navbar {
+    background-color: #e3f2fd !important;
+}

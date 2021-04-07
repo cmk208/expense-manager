@@ -1,0 +1,175 @@
+<div class="row mt-3">
+    <div class="col-12">
+        <input type="button" class="btn btn-primary" value="Add New" (click)="addTransaction()" data-backdrop="static" data-keyboard="false" data-bs-toggle="modal" data-bs-target="#transactionModal" />
+    </div>
+  </div>
+  <div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="transactionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="transactionModalLabel">{{ModalTitle}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <app-transaction-add-edit [transaction]="transaction" *ngIf="activateAddEditTransaction"></app-transaction-add-edit>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="row mt-3 mb-3 search-box">
+    <div class="col-sm-12 form-group mt-1 mb-1">
+      <span>Search Criteria:</span>
+    </div>
+    <div class="col-sm-12 form-group mt-1">
+      <label for="SelSearchType">Search Type:</label>
+      <select id="SelSearchType" name="SelSearchType" [(ngModel)]="SearchType" class="form-control"  (change)='onSearchTypeSelected(SearchType)'>
+        <option value="Weekly">Weekly</option>
+        <option value="Monthly">Monthly</option>
+        <option value="Annually">Annually</option>
+        <option value="DateRange">Date Range</option>
+      </select>
+      <small class="error" *ngIf="searchNow && (SearchType==null || SearchType=='')">Search type cannot be empty.</small>
+    </div>
+    <div class="col-sm-12 form-group mt-1">
+        <label for="SelTransactionType">Transaction Type:</label>
+        <select id="SelTransactionType" name="SelTransactionType" [(ngModel)]="TransactionTypeID" class="form-control" (change)='onTransactionTypeSelected($event)'>
+            <option *ngFor="let tt of TransactionTypeList" [ngValue]="tt.TransactionTypeID">{{tt.TransactionTypeName}}</option>
+        </select>
+        <small class="error" *ngIf="searchNow && (TransactionTypeID==null || TransactionTypeID=='')">Transaction type cannot be empty.</small>
+    </div>
+    <div class="col-sm-6 form-group mt-1" *ngIf="searchType=='Weekly'">
+      <label for="SelWYear">Year:</label>
+      <select id="SelWYear" name="SelWYear" [(ngModel)]="WYear" class="form-control">
+        <option value="2020">2020</option>
+        <option value="2021">2021</option>
+        <option value="2022">2022</option>
+        <option value="2023">2023</option>
+      </select>
+      <small class="error" *ngIf="searchNow && searchType=='Weekly' && WYear==null">Year cannot be empty.</small>
+    </div>
+    <div class="col-sm-6 form-group mt-1" *ngIf="searchType=='Weekly'">
+      <label for="TxtWeekNumber">Week Number:</label>
+      <input type="number" id="TxtWeekNumber" name="TxtWeekNumber" class="form-control" [(ngModel)]="WeekNo" (keyup)='onWeekNoSelected(WeekNo)' (change)='onWeekNoSelected(WeekNo)' />
+      <small class="error" *ngIf="searchNow && searchType=='Weekly' && WeekNo==null">Week no cannot be empty.</small>
+    </div>
+    <div class="col-sm-6 form-group mt-1" *ngIf="searchType=='Weekly'">
+      <label for="TxtStartDate">Start Date:</label>
+      <input type="date" id="TxtStartDate" name="TxtStartDate" class="form-control" [(ngModel)]="WStartDate" readonly />
+    </div>
+    <div class="col-sm-6 form-group mt-1" *ngIf="searchType=='Weekly'">
+      <label for="TxtEndDate">End Date:</label>
+      <input type="date" id="TxtEndDate" name="TxtEndDate" class="form-control" [(ngModel)]="WEndDate" readonly />
+    </div>
+    <div class="col-sm-6 form-group mt-1" *ngIf="searchType=='Monthly'">
+      <label for="SelMYear">Year:</label>
+      <select id="SelMYear" name="SelMYear" [(ngModel)]="MYear" class="form-control">
+        <option value="2020">2020</option>
+        <option value="2021">2021</option>
+        <option value="2022">2022</option>
+        <option value="2023">2023</option>
+      </select>
+      <small class="error" *ngIf="searchNow && searchType=='Monthly' && MYear==null">Year cannot be empty.</small>
+    </div>
+    <div class="col-sm-6 form-group mt-1" *ngIf="searchType=='Monthly'">
+      <label for="SelMMonth">Month:</label>
+      <select id="SelMMonth" name="SelMMonth" [(ngModel)]="MMonth" class="form-control">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+      </select>
+      <small class="error" *ngIf="searchNow && searchType=='Monthly' && MMonth==null">Month cannot be empty.</small>
+    </div>
+    <div class="col-sm-12 form-group mt-1" *ngIf="searchType=='Annually'">
+      <label for="SelYear">Year:</label>
+      <select id="SelYear" name="SelYear" [(ngModel)]="Year" class="form-control">
+        <option value="2020">2020</option>
+        <option value="2021">2021</option>
+        <option value="2022">2022</option>
+        <option value="2023">2023</option>
+      </select>
+      <small class="error" *ngIf="searchNow && searchType=='Annually' && Year==null">Year cannot be empty.</small>
+    </div>
+    <div class="col-sm-6 form-group mt-1" *ngIf="searchType=='DateRange'">
+      <label for="TxtStartDate">Start Date:</label>
+      <input type="date" id="TxtStartDate" name="TxtStartDate" class="form-control" [(ngModel)]="StartDate" />
+      <small class="error" *ngIf="searchNow && searchType=='DateRange' && StartDate==null">Start date cannot be empty.</small>
+    </div>
+    <div class="col-sm-6 form-group mt-1" *ngIf="searchType=='DateRange'">
+      <label for="TxtEndDate">End Date:</label>
+      <input type="date" id="TxtEndDate" name="TxtEndDate" class="form-control" [(ngModel)]="EndDate" />
+      <small class="error" *ngIf="searchNow && searchType=='DateRange' && EndDate==null">End date cannot be empty.</small>
+    </div>
+    <div class="col-sm-6 form-group mt-1">
+      <label for="SelFromAccount">From Account (Optional):</label>
+      <select id="SelFromAccount" name="SelFromAccount" [(ngModel)]="FromAccountID" class="form-control">
+          <option value="">Select a from account</option>
+          <option *ngFor="let fa of FromAccountList" [ngValue]="fa.AccountID">{{fa.AccountName}}</option>
+      </select>
+    </div>
+    <div class="col-sm-6 form-group mt-1" *ngIf="TransactionTypeName!='Transfer'">
+      <label for="SelCategory">Category (Optional):</label>
+      <select id="SelCategory" name="SelCategory" [(ngModel)]="CategoryID" class="form-control">
+          <option value="">Select a category</option>
+          <option *ngFor="let c of CategoryList" [ngValue]="c.CategoryID">{{c.CategoryName}}</option>
+      </select>
+    </div>
+    <div class="col-sm-6 form-group mt-1">
+      <label for="TxtMin">Min (Optional):</label>
+      <input type="number" id="TxtMin" name="TxtMin" class="form-control" [(ngModel)]="Min" />
+    </div>
+    <div class="col-sm-6 form-group mt-1">
+      <label for="TxtMax">Max (Optional):</label>
+      <input type="number" id="TxtMax" name="TxtMax" class="form-control" [(ngModel)]="Max" />
+    </div>
+    <div class="col-sm-12 form-group mt-1">
+      <input type="button" class="btn btn-primary" value="Search" (click)="search()" />
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-12 table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Transaction Type</th>
+            <th scope="col">Transaction Date</th>
+            <th scope="col">Transaction Time</th>
+            <th scope="col">From Account</th>
+            <th scope="col">To Account</th>
+            <th scope="col">Category</th>
+            <th scope="col">Debit/Credit</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Note</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of TransactionList; index as i">
+            <td>{{i + 1}}</td>
+            <td>{{data.TransactionTypeName}}</td>
+            <td>{{this.datePipe.transform(data.TransactionDate, 'yyyy-MM-dd')}}</td>
+            <td>{{data.TransactionTime}}</td>
+            <td>{{data.FromAccountName}}</td>
+            <td>{{data.ToAccountName}}</td>
+            <td>{{data.CategoryName}}</td>
+            <td>{{data.Operator == true ? 'Debit' : 'Credit'}}</td>
+            <td>{{data.Amount | currency}}</td>
+            <td>{{data.Note}}</td>
+            <td>
+                <input type="button" class="btn btn-primary mr-1" value="Edit" (click)="editTransaction(data)" data-backdrop="static" data-keyboard="false" data-bs-toggle="modal" data-bs-target="#transactionModal" />
+                <input type="button" class="btn btn-danger" value="Delete" (click)="deleteTransaction(data)" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
